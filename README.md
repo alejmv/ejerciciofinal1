@@ -5,17 +5,17 @@ Adjunto en este repositorio se encuentran 3 documentos que son `proyecto final.R
 El documento en formato Rmd para poder ser leído se requiere instalar los paquetes `readxl`, `ggplot2`, `dplyr`, `shiny`, `rvest`, `plyr`, `ggrepel`, `plotly`, `DT`, `lubridate`, `googledrive` mediante los comandos: 
 
 ```
-install.packages(readxl)
-install.packages(ggplot2)
-install.packages(dplyr)
-install.packages(shiny)
-install.packages(rvest)
-install.packages(plyr)
-install.packages(ggrepel)
-install.packages(plotly)
-install.packages(DT)
-install.packages(lubridate)
-install.packages(googledrive)
+install.packages('readxl')
+install.packages('ggplot2')
+install.packages('dplyr')
+install.packages('shiny')
+install.packages('rvest')
+install.packages('plyr')
+install.packages('ggrepel')
+install.packages('plotly')
+install.packages('DT')
+install.packages('lubridate')
+install.packages('googledrive')
 ```
 
 Luego de instalados para cargarlos:
