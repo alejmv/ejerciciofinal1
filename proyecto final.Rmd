@@ -26,6 +26,7 @@ library(ggrepel)
 library(plotly)
 library(DT)
 library(lubridate)
+library(googledrive)
 ```
 
 ```{r echo = FALSE}
@@ -53,15 +54,23 @@ Un punto negativo a tomar en cuenta de la guía de [RStudio](https://rmarkdown.r
 
 # Copa Mundial de Fútbol Rusia 2018
 
+```{r include = FALSE}
+wd <- getwd()
+url <- 'https://drive.google.com/open?id=1G7xOGjsY3j2aveXKZDCbP8jFDZ0TY4Mr'
+url2 <- 'FIFA 2018 Statistics.xlsx'
+drive_download(url, overwrite = TRUE)
+ruta <- paste0(wd,'/',url2)
+```
+
 ```{r echo = FALSE}
-mundial2018 <- read_excel("~/Clase R/material/dat/FIFA 2018 Statistics.xlsx", 
-    col_types = c("date", "text", "text", 
-        "numeric", "numeric", "numeric", 
-        "numeric", "numeric", "numeric", 
-        "numeric", "numeric", "numeric", 
-        "numeric", "numeric", "numeric", 
-        "numeric", "numeric", "numeric", 
-        "numeric", "numeric", "text"))
+mundial2018 <- read_excel(ruta, 
+                          col_types = c("date", "text", "text", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "text"))
 mundial2018 <- mundial2018[-c(47:49),]
 mundial2018.copy <- mundial2018
 names(mundial2018.copy)[4] <- "Goles"
