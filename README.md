@@ -7,6 +7,8 @@ Adjunto en este repositorio se encuentran 3 documentos que son `proyectofinal1.R
 
 - Después de extraer la carpeta, abrir el archivo `proyectofinal1.Rmd` y correr de manera normal.
 
+- De no extraer (unzip) la carpeta descargada no cargará la base de datos utilizada (también adjunta en la carpeta) en `R`.
+
 Además de esto, el documento en formato Rmd para poder ser leído se requiere instalar los paquetes `readxl`, `ggplot2`, `dplyr`, `shiny`, `rvest`, `plyr`, `ggrepel`, `plotly`, `DT`, y `lubridate` mediante los comandos:
 
 ```
