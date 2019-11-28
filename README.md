@@ -20,7 +20,6 @@ install.packages('ggrepel')
 install.packages('plotly')
 install.packages('DT')
 install.packages('lubridate')
-install.packages('googledrive')
 ```
 
 Luego de instalados para cargarlos:
@@ -36,5 +35,4 @@ library(ggrepel)
 library(plotly)
 library(DT)
 library(lubridate)
-library(googledrive)
 ```
