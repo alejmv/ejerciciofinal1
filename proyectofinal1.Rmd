@@ -1,0 +1,142 @@
+---
+title: "Ejercicio Final - Business Performance Analysis"
+author: "Luis Alfonso Alejandro Mercado Vásquez"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+
+output:
+  html_document:
+    toc: true
+    number_sections: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    theme: darkly
+    highlight: tango
+---
+
+```{r include = FALSE}
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(shiny)
+library(rvest)
+library(plyr)
+library(ggrepel)
+library(plotly)
+library(DT)
+library(lubridate)
+```
+
+```{r echo = FALSE}
+regex <- "Expresiones Regulares"
+```
+# `r regex`
+
+La primera sección de este documento se basará en las **`r regex`**, también conocidas como regex, regexp o expresión racional. Estas son secuencias de caracteres que forman un patrón de búsqueda, principalmente utilizadas para la búsqueda de patrones de cadenas de caracteres u operaciones de sustituciones. [1](http://rpubs.com/ydmarinb/429756) 
+
+Dos páginas de internet para saber más sobre los usos de **`r regex`** son [UC Business Analytics](http://uc-r.github.io/regex) y [Diego Calvo](http://www.diegocalvo.es/expresiones-regulares-en-r/) las cuales muestran ejemplos de cómo utilizar **`r regex`**. 
+
+Ambas fuentes son de gran ayuda a la hora de trabajar con `r regex` pero considero que la más completa es la de [UC Business Analytics](http://uc-r.github.io/regex) debido a que brinda una explicación más extensa de las distintas `r regex` con las que estemos trabajando, mientras que la de [Diego Calvo](http://www.diegocalvo.es/expresiones-regulares-en-r/) únicamente muestra un ejemplo para cada una de las `r regex` que puede dejar al lector con dudas de por qué lo realizó de esa manera. 
+
+***
+
+# RMarkdown
+
+**RMarkdown** es un formato que permite una fácil creación de documentos, presentaciones dinámicas e informes de R. Markdown es un formato de sintaxis simple para crear documentos en `HTML`, `PDF`, y `Word`. [2](https://rstudio-pubs-static.s3.amazonaws.com/169221_63fd9f5f6c71491fbbfe42ed298b3c31.html) 
+
+Existen múltiples guías y recursos acerca de RMarkdown en internet, sin embargo para mi gusto considero que la más efectiva y dinámica es la guía de [RStudio](https://rmarkdown.rstudio.com/lesson-1.html) debido a que esta abarca todo lo básico relacionado a RMarkdown para poder crear documentos en el formato que desees. 
+
+Un punto negativo a tomar en cuenta de la guía de [RStudio](https://rmarkdown.rstudio.com/lesson-1.html) es que no contiene información de como crear una tabla de contenido en mi documento. Esta información si puede ser encontrada en otra guía útil como lo es [R para Ciencia de Datos](https://es.r4ds.hadley.nz/r-markdown.html) la cual también ofrece a detalle recursos de RMarkdown. Esta última guía también contiene informaciones sobre creaciones de gráficos que no abarca la página web de [RStudio](https://rmarkdown.rstudio.com/lesson-1.html) utilizando las funciones `ggplot2` y `ggrepel` para, por ejemplo, colocar etiquetas, anotaciones, ajustar escalas, y cambiar los temas de las gráficas. 
+
+***
+
+# Copa Mundial de Fútbol Rusia 2018
+
+```{r echo = FALSE}
+mundial2018 <- read_excel("FIFA 2018 Statistics.xlsx", 
+                          col_types = c("date", "text", "text", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "numeric", 
+                                        "numeric", "numeric", "text"))
+mundial2018 <- mundial2018[-c(47:49),]
+mundial2018.copy <- mundial2018
+names(mundial2018.copy)[4] <- "Goles"
+names(mundial2018.copy)[5] <- "Posesion"
+goles.posesion <- ddply(mundial2018, c("Team"), summarise, total.goles = sum(`Goal Scored`), posesion = mean(`Ball Possession %`))
+spain <- filter(goles.posesion, goles.posesion$Team == "Spain")
+```
+ 
+Esta sección muestra y analiza datos de la Copa Mundial de Fútbol llevada a cabo en Rusia en el verano de 2018. El torneo se disputó en 11 ciudades en las cuales participaron 32 países resultando Francia el campeón del certamen, que derrotó por 4-2 a Croacia en la final, y se consagró por segunda vez después de 20 años.
+ 
+Esta edición del torneo, además de ser la vigésima primera edición también fue la más cara de la historia. Por otra parte, es la primera vez que se utilizó el árbitro asistente por video (VAR por sus siglas en inglés) y un balón oficial con un chip incorporado para seguir los partidos en vivo mediante una aplicación en esta competencia. [3](https://es.wikipedia.org/wiki/Copa_Mundial_de_F%C3%BAtbol_de_2018)
+ 
+ 
+
+## Goles y posesión del balón
+ 
+Aunque la copa se jugó desde el `r ymd("20180614")` hasta el `r ymd("20180614") + 31`, esta subsección solo analizará datos de la primera semana del torneo que comprende desde el `r ymd("20180614")` hasta el `r ymd("20180614") + 7`.
+
+Dicho esto, analizando los goles y la posesión del balón (que representa el porcentaje de tiempo del total del partido que cada equipo tiene el balón) por país se esperaría que los equipos con mayor posesión de balón fueran también los que mayores goles anotan. El gráfico a continuación muestra la relación entre ambas variables por país. La posesión promedio del balón fue de `r mean(mundial2018.copy$Posesion)`% mientras que los goles anotados en promedio fue de `r round(mean(mundial2018.copy$Goles), 2)` goles por equipo.
+ 
+El equipo de mayor posesión de balón y mayor cantidad de goles fue España con un total de `r sum(spain$total.goles)` goles y un promedio de posesión de balón de `r mean(spain$posesion)`%.   
+
+```{r echo = FALSE}
+goles.posesion <- ddply(mundial2018, c("Team"), summarise, total.goles = sum(`Goal Scored`), posesion = mean(`Ball Possession %`))
+
+p <- ggplot(goles.posesion, aes(x = total.goles, y = posesion, col = Team)) + geom_point() + geom_text_repel(aes(label = Team), size = 2.8) + theme(plot.background = element_rect(fill = "black")) + theme(legend.position = 'none') + labs(title="Relación entre goles y posesión del balón", subtitle="Posesión promedio del balón y cantidad total de goles por país", x="Total de goles", y="Posesión promedio (en %)") + theme(plot.title = element_text(color = "white")) + theme(plot.subtitle = element_text(color = "white")) + theme(axis.title = element_text(color = "white")) + theme(panel.background = element_rect(fill = "lightgray")) + theme(axis.text = element_text(color = "white")) + theme(panel.border = element_blank(), panel.grid.major = element_line(color = "white"), panel.grid.minor = element_blank())
+p
+```
+ 
+ 
+ 
+## Jugador del Partido
+
+Del mismo modo que se espera que a mayor posesión de balón, mayor cantidad de goles, también es de esperar que el equipo, o más bien el jugador, que domina el partido (tanto en posesión como goles) sea premiado como “Man Of The Match” equivalente a ser el mejor jugador del partido. 
+
+El gráfico a continuación divide la posesión del balón y el total de goles en si (Yes) fue elegido como “Jugador del partido” o no. 
+
+Un punto a destacar es que Francia tuvo un partido con dos goles y 51% de posesión de balón pero ninguno de sus jugadores fue premiado como “Jugador del Partido”. Sin embargo, tuvo un partido con un gol y 44% de posesión de balón y en este caso si recibió este reconocimiento. Similar sucedió con Portugal, el cual tuvo un partido con tres goles y ninguno de sus jugadores recibió este reconocimiento, pero disputó un partido marcando un gol y en este caso si recibieron el reconocimiento. 
+
+Por otro lado, Alemania tuvo un partido con cero goles anotados y uno de sus jugadores recibió el premio de “Jugador del Partido” siendo este el único equipo con dicha característica.
+ 
+
+```{r echo = FALSE, warning = FALSE}
+motm <- ddply(mundial2018, c("Team", "`Man of the Match`"), summarise, total.goles = sum(`Goal Scored`), posesion = mean(`Ball Possession %`))
+
+p1 <- ggplot(motm, aes(x = total.goles, y = posesion, col = Team)) + geom_point() + geom_text_repel(aes(label = Team), size = 2.8) + theme(plot.background = element_rect(fill = "black")) + theme(legend.position = 'none') + labs(title="Jugador seleccionado como 'Jugador del Partido'", x="Total de goles", y="Posesión promedio (en %)") + theme(plot.title = element_text(color = "white")) + theme(plot.subtitle = element_text(color = "white")) + theme(axis.title = element_text(color = "white")) + theme(panel.background = element_rect(fill = "lightgray")) + theme(axis.text = element_text(color = "white")) + theme(panel.border = element_blank(), panel.grid.major = element_line(color = "white"), panel.grid.minor = element_blank()) + facet_wrap(~ motm$`Man of the Match`)
+ggplotly(p1)
+```
+  
+   
+    
+ 
+## Estadísticas generales
+
+La tabla a continuación (extraída de [Wikipedia](https://es.wikipedia.org/wiki/Anexo:Estad%C3%ADsticas_de_la_Copa_Mundial_de_F%C3%BAtbol_de_2018#Tabla_general)) muestra las estadísticas generales del torneo, donde “Puntos” está calculado por la cantidad de “Partidos Ganados” multiplicado por tres (3) y sumado a la cantidad de “Partidos Empatados” multiplicado por uno (1), “Diferencia de goles” se refiere a la diferencia entre los goles a favor y los goles en contra que tuvo el equipo, y por último “Rendimiento” representa el porcentaje de puntos logrados, es decir la división “Puntos” entre puntos posibles (partidos jugados multiplicado por tres).
+
+El equipo de mayor rendimiento fue Francia (88.88%), quien también fue el campeón del torneo. España tuvo un rendimiento de 50% con una diferencia de goles de +1, lo que quiere decir que anotó un gol más de los que recibió en contra.
+
+
+```{r echo = FALSE}
+url.mundial <- "https://es.wikipedia.org/wiki/Anexo:Estad%C3%ADsticas_de_la_Copa_Mundial_de_F%C3%BAtbol_de_2018#Tabla_general"
+urlmundial <- read_html(url.mundial)
+urlmundial <- html_nodes(urlmundial, "table")
+mundial <- html_table(urlmundial[[2]], fill = TRUE)
+colnames(mundial) <- c("Posición","Equipo","Puntos","Partidos Jugados","Partidos Ganados","Partidos Empatados","Partidos Perdidos","Goles a Favor","Goles en Contra", "Diferencia de Goles", "Rendimiento")
+mundial2 <- select(mundial, "Equipo","Puntos","Partidos Jugados","Partidos Ganados","Partidos Empatados","Partidos Perdidos", "Diferencia de Goles", "Rendimiento")
+datatable(mundial2) %>% 
+  formatStyle('Puntos', Color = 'black') %>% 
+  formatStyle('Equipo', Color = 'black') %>% 
+  formatStyle('Partidos Jugados', Color = 'black') %>% 
+  formatStyle('Partidos Ganados', Color = 'black') %>% 
+  formatStyle('Partidos Empatados', Color = 'black') %>% 
+  formatStyle('Partidos Perdidos', Color = 'black') %>% 
+  formatStyle('Diferencia de Goles', Color = 'black') %>% 
+  formatStyle('Rendimiento', Color = 'black')
+```
+
+
+
