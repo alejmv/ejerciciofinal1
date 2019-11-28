@@ -7,7 +7,7 @@ Adjunto en este repositorio se encuentran 3 documentos que son `proyectofinal1.R
 
 - Después de extraer la carpeta, abrir el archivo `proyectofinal1.Rmd` y correr de manera normal.
 
-Además de esto, el documento en formato Rmd para poder ser leído se requiere instalar los paquetes `readxl`, `ggplot2`, `dplyr`, `shiny`, `rvest`, `plyr`, `ggrepel`, `plotly`, `DT`, `lubridate`, `googledrive` mediante los comandos: 
+Además de esto, el documento en formato Rmd para poder ser leído se requiere instalar los paquetes `readxl`, `ggplot2`, `dplyr`, `shiny`, `rvest`, `plyr`, `ggrepel`, `plotly`, `DT`, y `lubridate` mediante los comandos:
 
 ```
 install.packages('readxl')
