@@ -3,7 +3,7 @@
 Adjunto en este repositorio se encuentran 3 documentos que son `proyectofinal1.Rmd`, que es donde se encuentra el archivo de `Rmarkdown` con los comandos utilizados, `proyectofinal1.html` que es el resultado final en formato `HTML`, y `FIFA 2018 Statistics.xlsx` que es la base de datos utilizada en una de las secciones.
 
 **IMPORTANTE:** 
-- Para poder ejecutar el documento correctamente en `Rmarkdown` primero se debe descargar la carpeta completa del repositorio en formato `.zip` y luego de esto se deben extraer la carpeta `.zip`.
+- Para poder ejecutar el documento correctamente en `Rmarkdown` primero se debe descargar la carpeta completa del repositorio en formato `.zip` y luego de esto se debe extraer (o `unzip`) la carpeta `.zip`.
 
 - Después de extraer la carpeta, abrir el archivo `proyectofinal1.Rmd` y correr de manera normal.
 
