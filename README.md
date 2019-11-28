@@ -3,10 +3,24 @@
 Adjunto en este repositorio se encuentran 3 documentos que son `proyectofinal.Rmd`, que es donde se encuentra el archivo de `Rmarkdown` con los comandos utilizados, `proyectofinal.html` que es el resultado final en formato `HTML`, y `FIFA 2018 Statistics.xlsx` que es la base de datos utilizada en una de las secciones (aunque en el documento de `RMarkdown` los datos estan cargados vía Google Drive).
 
 **IMPORTANTE:** 
-- Para poder cargar los datos de Google Drive se debe pegar en la consola de R el código que se muestra a continuación:
+- Para poder cargar los datos de Google Drive se debe pegar y ejecutar en la **consola** de R los códigos que se muestran a continuación:
 
-`url <- 'https://drive.google.com/open?id=1G7xOGjsY3j2aveXKZDCbP8jFDZ0TY4Mr'
-drive_download(url, overwrite = TRUE)`
+- Primero:
+
+`install.packages('googledrive')`
+
+- Segundo:
+
+`library(googledrive)`
+
+- Tercero:
+
+ `url <- 'https://drive.google.com/open?id=1G7xOGjsY3j2aveXKZDCbP8jFDZ0TY4Mr'`
+
+- Después ejecutar: 
+
+`drive_download(url, overwrite = TRUE)`
+
 - Luego de esto la consola de R te preguntará si le das permiso y escribimos `Yes` en la consola.
 - Se abrirá una ventana en tu navegador predeterminado y concederás acceso a la API para que pueda descargar los archivos.
 - Ya será posible ejecutar el código del archivo `proyectofinal.Rmd`.
